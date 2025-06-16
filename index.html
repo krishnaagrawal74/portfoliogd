@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Krishna Raj Agrawal - Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@2/dist/email.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      scroll-behavior: smooth;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Roboto', sans-serif;
+    }
+    body {
+      background: #f1f5f9;
+      color: #1e293b;
+      line-height: 1.6;
+      transition: background 0.3s, color 0.3s;
+    }
+    body.dark-mode {
+      background: #1e293b;
+      color: #e2e8f0;
+    }
+    header {
+      background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+      color: #fff;
+      padding: 4rem 2rem;
+      text-align: center;
+      position: relative;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    header img {
+      max-width: 160px;
+      border-radius: 80px;
+      margin-bottom: 1rem;
+      border: 3px solid #fff;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    header h1 {
+      font-size: calc(2rem + 1vw);
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    header p {
+      font-size: calc(1rem + 0.2vw);
+      font-weight: 300;
+    }
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 2.5rem;
+      padding: 1.2rem;
+      background: #fff;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      transition: background 0.3s;
+    }
+    nav.dark-mode {
+      background: #334155;
+    }
+    nav a {
+      text-decoration: none;
+      color: #1e293b;
+      font-weight: 400;
+      font-size: calc(0.9rem + 0.2vw);
+      transition: color 0.3s;
+      cursor: pointer;
+    }
+    nav a:hover {
+      color: #3b82f6;
+    }
+    nav.dark-mode a {
+      color: #e2e8f0;
+    }
+    section {
+      padding: 4rem 2rem;
+      max-width: 1200px;
+      margin: auto;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: slideIn 0.5s ease forwards;
+    }
+    h2 {
+      font-size: calc(1.8rem + 0.4vw);
+      font-weight: 700;
+      color: #3b82f6;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    #about p {
+      max-width: 700px;
+      margin: 0 auto 1.5rem;
+      font-size: calc(0.9rem + 0.2vw);
+    }
+    #about ul {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    #about ul li {
+      background: #e5e7eb;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: calc(0.7rem + 0.2vw);
+      color: #1e293b;
+    }
+    .dark-mode #about ul li {
+      background: #475569;
+      color: #e2e8f0;
+    }
+    .project-category {
+      margin-bottom: 3rem;
+    }
+    .project-category h3 {
+      font-size: calc(1.2rem + 0.2vw);
+      color: #1e293b;
+      margin-bottom: 1rem;
+      font-weight: 500;
+    }
+    .project-category.dark-mode h3 {
+      color: #e2e8f0;
+    }
+    .projects {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+    .card {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+      display: none; /* Hidden by default, shown via JS if image exists */
+    }
+    .card.active {
+      display: block; /* Show card if image is available */
+    }
+    .card.dark-mode {
+      background: #334155;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    }
+    .card img {
+      width: 100%;
+      height: 200px;
+      object-fit: contain;
+      background: #f0f0f0;
+    }
+    .card.dark-mode img {
+      background: #2d3748;
+    }
+    .card-body {
+      padding: 1.5rem;
+    }
+    .card-body h4 {
+      font-size: calc(1rem + 0.2vw);
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+    .card-body p {
+      font-size: calc(0.7rem + 0.2vw);
+      color: #64748b;
+      margin-bottom: 1rem;
+    }
+    .card-body .tech {
+      font-size: calc(0.6rem + 0.2vw);
+      color: #3b82f6;
+      margin-bottom: 1rem;
+    }
+    .card-body .actions {
+      display: flex;
+      gap: 1rem;
+    }
+    .action-btn {
+      padding: calc(0.4rem + 0.2vw) calc(0.8rem + 0.2vw);
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: calc(0.7rem + 0.2vw);
+      transition: background 0.3s;
+    }
+    .view-btn {
+      background: #3b82f6;
+      color: #fff;
+    }
+    .download-btn {
+      background: #1e293b;
+      color: #fff;
+      text-decoration: none;
+    }
+    .action-btn:hover {
+      opacity: 0.9;
+    }
+    .contact-form {
+      max-width: 600px;
+      margin: auto;
+      background: #fff;
+      padding: 2.5rem;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+      transition: background 0.3s, transform 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .contact-form::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: linear-gradient(to right, #3b82f6, #10b981);
+    }
+    .contact-form.dark-mode {
+      background: #334155;
+    }
+    .contact-form input,
+    .contact-form textarea {
+      width: 100%;
+      padding: calc(0.8rem + 0.2vw);
+      margin: 0.75rem 0;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      background: #f9fafb;
+      color: #1e293b;
+      font-size: calc(0.8rem + 0.2vw);
+      transition: border-color 0.3s, background 0.3s, box-shadow 0.3s;
+    }
+    .contact-form.dark-mode input,
+    .contact-form.dark-mode textarea {
+      background: #475569;
+      color: #e2e8f0;
+      border-color: #64748b;
+    }
+    .contact-form input:focus,
+    .contact-form textarea:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+    .contact-form button {
+      width: 100%;
+      padding: calc(0.8rem + 0.2vw);
+      background: #3b82f6;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: calc(0.8rem + 0.2vw);
+      font-weight: 500;
+      transition: background 0.3s, transform 0.2s;
+    }
+    .contact-form button:hover {
+      background: #2563eb;
+      transform: translateY(-2px);
+    }
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      background: #1e293b;
+      color: #fff;
+      font-size: calc(0.7rem + 0.2vw);
+      transition: background 0.3s;
+    }
+    footer.dark-mode {
+      background: #0f172a;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.9);
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+      overflow: hidden;
+    }
+    .modal-content {
+      position: relative;
+      max-width: 90vw;
+      max-height: 90vh;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-content img {
+      width: 100%;
+      height: auto;
+      max-height: 90vh;
+      object-fit: contain;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    .close-btn {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      font-size: calc(1.2rem + 0.2vw);
+      color: #fff;
+      background: rgba(0,0,0,0.6);
+      padding: calc(0.4rem + 0.2vw) calc(0.8rem + 0.2vw);
+      border-radius: 50%;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .close-btn:hover {
+      background: rgba(0,0,0,0.8);
+    }
+    .theme-toggle {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      padding: calc(0.5rem + 0.2vw) calc(1rem + 0.2vw);
+      background: #3b82f6;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: calc(0.7rem + 0.2vw);
+      z-index: 1000;
+      transition: background 0.3s;
+    }
+    .theme-toggle:hover {
+      background: #2563eb;
+    }
+    .back-to-top {
+      position: fixed;
+      bottom: 1rem;
+      right: 1rem;
+      padding: calc(0.6rem + 0.2vw);
+      background: #3b82f6;
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      z-index: 1000;
+      transition: background 0.3s;
+    }
+    .back-to-top:hover {
+      background: #2563eb;
+    }
+    @media (max-width: 768px) {
+      header {
+        padding: 3rem 1rem;
+      }
+      header h1 {
+        font-size: calc(1.6rem + 0.4vw);
+      }
+      header img {
+        max-width: 120px;
+      }
+      nav {
+        gap: 1.5rem;
+      }
+      nav a {
+        font-size: calc(0.8rem + 0.2vw);
+      }
+      section {
+        padding: 2rem 1rem;
+      }
+      .projects {
+        grid-template-columns: 1fr;
+      }
+      .contact-form {
+        padding: 2rem;
+      }
+    }
+    @keyframes slideIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <button class="theme-toggle" onclick="toggleTheme()">
+    <i class="fas fa-adjust"></i> Theme
+  </button>
+  <button class="back-to-top" onclick="scrollToTop()">
+    <i class="fas fa-arrow-up"></i>
+  </button>
+  <header>
+    <img src="me.png" alt="Krishna Raj Agrawal">
+    <h1>Krishna Raj Agrawal</h1>
+    <p>Graphic Designer | Crafting Visually Stunning Posters, Thumbnails & Presentations</p>
+  </header>
+
+  <nav>
+    <a onclick="scrollToSection('about')">About</a>
+    <a onclick="scrollToSection('projects')">Projects</a>
+    <a onclick="scrollToSection('contact')">Contact</a>
+  </nav>
+
+  <section id="about">
+    <h2>About Me</h2>
+    <p>I'm Krishna Raj Agrawal, a passionate graphic designer from Motilal Nehru National Institute of Technology, Allahabad. With expertise in Canva, I create impactful posters, thumbnails, and presentations that blend creativity with clarity. My work is driven by a love for visual storytelling and staying ahead of design trends.</p>
+    <ul>
+      <li>Poster Design</li>
+      <li>Thumbnail Creation</li>
+      <li>Presentation Design</li>
+      <li>Canva Expertise</li>
+      <li>Visual Storytelling</li>
+    </ul>
+  </section>
+
+  <section id="projects">
+    <h2>My Projects</h2>
+
+    <div class="project-category">
+      <h3>Posters</h3>
+      <div class="projects">
+        <div class="card">
+          <img src="image1.png" alt="Poster Design 1">
+          <div class="card-body">
+            <h4>Event Poster</h4>
+            <p>A vibrant poster designed for a college event, capturing attention with bold colors and dynamic layout.</p>
+            <p class="tech">Tools: Canva</p>
+            <div class="actions">
+              <button class="action-btn view-btn" onclick="openModal('image1.png')">View</button>
+              <a href="image1.png" download class="action-btn download-btn">Download</a>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <img src="image2.png" alt="Poster Design 2">
+          <div class="card-body">
+            <h4>Promotional Poster</h4>
+            <p>A sleek design for a product launch, emphasizing clarity and visual appeal.</p>
+            <p class="tech">Tools: Canva</p>
+            <div class="actions">
+              <button class="action-btn view-btn" onclick="openModal('image2.png')">View</button>
+              <a href="image2.png" download class="action-btn download-btn">Download</a>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <img src="image3.png" alt="Poster Design 3">
+          <div class="card-body">
+            <h4>Community Poster</h4>
+            <p>A poster for a local community event, designed with a warm and inviting aesthetic.</p>
+            <p class="tech">Tools: Canva</p>
+            <div class="actions">
+              <button class="action-btn view-btn" onclick="openModal('image3.png')">View</button>
+              <a href="image3.png" download class="action-btn download-btn">Download</a>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <img src="image4.png" alt="Poster Design 4">
+          <div class="card-body">
+            <h4>Festival Poster</h4>
+            <p>A festive design celebrating a cultural event with vibrant imagery.</p>
+            <p class="tech">Tools: Canva</p>
+            <div class="actions">
+              <button class="action-btn view-btn" onclick="openModal('image4.png')">View</button>
+              <a href="image4.png" download class="action-btn download-btn">Download</a>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <img src="image5.png" alt="Poster Design 5">
+          <div class="card-body">
+            <h4>Charity Poster</h4>
+            <p>A heartfelt design for a charity campaign, focusing on emotional impact.</p>
+            <p class="tech">Tools: Canva</p>
+            <div class="actions">
+              <button class="action-btn view-btn" onclick="openModal('image5.png')">View</button>
+              <a href="image5.png" download class="action-btn download-btn">Download</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-category">
+      <h3>Thumbnails</h3>
+      <div class="projects">
+        <div class="card">
+          <img src="image1.png" alt="Thumbnail Design 1">
+          <div class="card-body">
+            <h4>Video Thumbnail</h4>
+            <p>Engaging thumbnail for a YouTube video, designed to boost click-through rates.</p>
+            <p class="tech">Tools: Canva</p>
+            <div class="actions">
+              <button class="action-btn view-btn" onclick="openModal('image1.png')">View</button>
+              <a href="image1.png" download class="action-btn download-btn">Download</a>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <img src="image2.png" alt="Thumbnail Design 2">
+          <div class="card-body">
+            <h4>Social Media Thumbnail</h4>
+            <p>A thumbnail crafted for social media, optimized for quick visual impact.</p>
+            <p class="tech">Tools: Canva</p>
+            <div class="actions">
+              <button class="action-btn view-btn" onclick="openModal('image2.png')">View</button>
+              <a href="image2.png" download class="action-btn download-btn">Download</a>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <img src="image3.png" alt="Thumbnail Design 3">
+          <div class="card-body">
+            <h4>Blog Thumbnail</h4>
+            <p>A thumbnail for a blog post, designed to attract readers with bold visuals.</p>
+            <p class="tech">Tools: Canva</p>
+            <div class="actions">
+              <button class="action-btn view-btn" onclick="openModal('image3.png')">View</button>
+              <a href="image3.png" download class="action-btn download-btn">Download</a>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <img src="image4.png" alt="Thumbnail Design 4">
+          <div class="card-body">
+            <h4>Webinar Thumbnail</h4>
+            <p>A professional thumbnail for an online webinar, highlighting key topics.</p>
+            <p class="tech">Tools: Canva</p>
+            <div class="actions">
+              <button class="action-btn view-btn" onclick="openModal('image4.png')">View</button>
+              <a href="image4.png" download class="action-btn download-btn">Download</a>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <img src="image5.png" alt="Thumbnail Design 5">
+          <div class="card-body">
+            <h4>Podcast Thumbnail</h4>
+            <p>A dynamic thumbnail for a podcast episode, designed to grab attention.</p>
+            <p class="tech">Tools: Canva</p>
+            <div class="actions">
+              <button class="action-btn view-btn" onclick="openModal('image5.png')">View</button>
+              <a href="image5.png" download class="action-btn download-btn">Download</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-category">
+      <h3>Presentations</h3>
+      <div class="projects">
+        <div class="card">
+          <img src="image1.png" alt="Presentation Slide 1">
+          <div class="card-body">
+            <h4>Business Pitch Slide</h4>
+            <p>A clean, professional slide for a case competition, highlighting key insights.</p>
+            <p class="tech">Tools: Canva</p>
+            <div class="actions">
+              <button class="action-btn view-btn" onclick="openModal('image1.png')">View</button>
+              <a href="image1.png" download class="action-btn download-btn">Download</a>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <img src="image2.png" alt="Presentation Slide 2">
+          <div class="card-body">
+            <h4>Summary Slide</h4>
+            <p>A concise slide summarizing project outcomes with clear visuals.</p>
+            <p class="tech">Tools: Canva</p>
+            <div class="actions">
+              <button class="action-btn view-btn" onclick="openModal('image2.png')">View</button>
+              <a href="image2.png" download class="action-btn download-btn">Download</a>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <img src="image3.png" alt="Presentation Slide 3">
+          <div class="card-body">
+            <h4>Strategy Slide</h4>
+            <p>A slide outlining strategic goals with a professional layout.</p>
+            <p class="tech">Tools: Canva</p>
+            <div class="actions">
+              <button class="action-btn view-btn" onclick="openModal('image3.png')">View</button>
+              <a href="image3.png" download class="action-btn download-btn">Download</a>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <img src="image4.png" alt="Presentation Slide 4">
+          <div class="card-body">
+            <h4>Data Visualization Slide</h4>
+            <p>A slide presenting data insights with engaging visuals.</p>
+            <p class="tech">Tools: Canva</p>
+            <div class="actions">
+              <button class="action-btn view-btn" onclick="openModal('image4.png')">View</button>
+              <a href="image4.png" download class="action-btn download-btn">Download</a>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <img src="image5.png" alt="Presentation Slide 5">
+          <div class="card-body">
+            <h4>Team Introduction Slide</h4>
+            <p>A slide introducing team members with a cohesive design.</p>
+            <p class="tech">Tools: Canva</p>
+            <div class="actions">
+              <button class="action-btn view-btn" onclick="openModal('image5.png')">View</button>
+              <a href="image5.png" download class="action-btn download-btn">Download</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-category">
+      <h3>Others</h3>
+      <div class="projects">
+        <div class="card">
+          <img src="image1.png" alt="Other Design 1">
+          <div class="card-body">
+            <h4>Logo Design</h4>
+            <p>A custom logo created for a student organization, focusing on brand identity.</p>
+            <p class="tech">Tools: Canva</p>
+            <div class="actions">
+              <button class="action-btn view-btn" onclick="openModal('image1.png')">View</button>
+              <a href="image1.png" download class="action-btn download-btn">Download</a>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <img src="image2.png" alt="Other Design 2">
+          <div class="card-body">
+            <h4>Digital Artwork</h4>
+            <p>An experimental piece exploring vibrant colors and abstract forms.</p>
+            <p class="tech">Tools: Canva</p>
+            <div class="actions">
+              <button class="action-btn view-btn" onclick="openModal('image2.png')">View</button>
+              <a href="image2.png" download class="action-btn download-btn">Download</a>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <img src="image3.png" alt="Other Design 3">
+          <div class="card-body">
+            <h4>Infographic</h4>
+            <p>An informative infographic summarizing complex data visually.</p>
+            <p class="tech">Tools: Canva</p>
+            <div class="actions">
+              <button class="action-btn view-btn" onclick="openModal('image3.png')">View</button>
+              <a href="image3.png" download class="action-btn download-btn">Download</a>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <img src="image4.png" alt="Other Design 4">
+          <div class="card-body">
+            <h4>Social Media Post</h4>
+            <p>A visually appealing post designed for social media engagement.</p>
+            <p class="tech">Tools: Canva</p>
+            <div class="actions">
+              <button class="action-btn view-btn" onclick="openModal('image4.png')">View</button>
+              <a href="image4.png" download class="action-btn download-btn">Download</a>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <img src="image5.png" alt="Other Design 5">
+          <div class="card-body">
+            <h4>Brochure Design</h4>
+            <p>A professional brochure for a student event, with a clean layout.</p>
+            <p class="tech">Tools: Canva</p>
+            <div class="actions">
+              <button class="action-btn view-btn" onclick="openModal('image5.png')">View</button>
+              <a href="image5.png" download class="action-btn download-btn">Download</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <h2>Contact Me</h2>
+    <form id="contact-form" class="contact-form" onsubmit="sendMessage(event)">
+      <input type="text" name="name" placeholder="Your Name" required>
+      <input type="email" name="email" placeholder="Your Email" required>
+      <textarea name="message" placeholder="Your Message" rows="6" required></textarea>
+      <button type="submit">Send Message</button>
+    </form>
+  </section>
+
+  <footer>
+    <p>© 2025 Krishna Raj Agrawal | Graphic Designer | All Rights Reserved</p>
+  </footer>
+
+  <div id="imageModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal()">×</span>
+      <img id="modalImage" src="" alt="Project Image">
+    </div>
+  </div>
+
+  <script>
+    // Initialize EmailJS
+    emailjs.init("YOUR_PUBLIC_KEY"); // Replace with your EmailJS public key
+
+    function sendMessage(e) {
+      e.preventDefault();
+      const form = e.target;
+      const submitBtn = form.querySelector('button[type="submit"]');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending...';
+      emailjs.sendForm('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', form) // Replace with your EmailJS service and template IDs
+        .then(() => {
+          alert('Message sent successfully! I will get back to you soon.');
+          form.reset();
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Send Message';
+        }, (error) => {
+          alert('Failed to send message. Please try again later.');
+          console.error('EmailJS error:', error);
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Send Message';
+        });
+    }
+
+    function openModal(imageSrc) {
+      const modal = document.getElementById('imageModal');
+      const modalImage = document.getElementById('modalImage');
+      modalImage.src = imageSrc;
+      modal.style.display = 'flex';
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('imageModal');
+      modal.style.display = 'none';
+    }
+
+    function scrollToSection(sectionId) {
+      const section = document.getElementById(sectionId);
+      section.scrollIntoView({ behavior: 'smooth' });
+      history.replaceState(null, null, window.location.pathname); // Remove hash from URL
+    }
+
+    function toggleTheme() {
+      document.body.classList.toggle('dark-mode');
+      document.querySelector('nav').classList.toggle('dark-mode');
+      document.querySelectorAll('.card').forEach(card => card.classList.toggle('dark-mode'));
+      document.querySelectorAll('.project-category').forEach(category => category.classList.toggle('dark-mode'));
+      document.querySelector('.contact-form').classList.toggle('dark-mode');
+      document.querySelector('footer').classList.toggle('dark-mode');
+      localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+    }
+
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      history.replaceState(null, null, window.location.pathname); // Remove hash from URL
+    }
+
+    // Load theme preference
+    if (localStorage.getItem('theme') === 'dark') {
+      toggleTheme();
+    }
+
+    // Show/hide back-to-top button
+    window.addEventListener('scroll', () => {
+      const backToTop = document.querySelector('.back-to-top');
+      backToTop.style.display = window.scrollY > 300 ? 'block' : 'none';
+    });
+
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+      const modal = document.getElementById('imageModal');
+      if (event.target === modal) {
+        closeModal();
+      }
+    }
+
+    // Check for image availability and show cards accordingly
+    document.querySelectorAll('.card img').forEach(img => {
+      const src = img.src;
+      const card = img.closest('.card');
+      const testImage = new Image();
+      testImage.src = src;
+      testImage.onload = () => {
+        card.classList.add('active');
+      };
+      testImage.onerror = () => {
+        card.style.display = 'none';
+      };
+    });
+  </script>
+</body>
+</html>
